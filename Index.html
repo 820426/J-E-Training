@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="J&E Training">
+<title>J&E Training App</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{--her:#C2185B;--her-l:#FCE4EC;--her-m:#F48FB1;--her-d:#880E4F;--him:#1565C0;--him-l:#E3F2FD;--him-m:#90CAF9;--him-d:#0D47A1;--van:#4A148C;--van-l:#F3E5F5;--van-m:#CE93D8;--run:#1B5E20;--run-l:#E8F5E9;--run-m:#81C784;--warn:#E65100;--warn-l:#FFF3E0;--bg:#F7F5F2;--surf:#FFFFFF;--txt:#1A1A1A;--mut:#777;--brd:#E5E0D8;--r:14px;--rs:10px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--txt)}
+.app{display:flex;flex-direction:column;height:100dvh;max-width:500px;margin:0 auto;background:var(--bg)}
+.hdr{background:var(--surf);border-bottom:1px solid var(--brd);padding:14px 18px 0;flex-shrink:0}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.logo{font-family:'DM Serif Display',serif;font-size:26px;letter-spacing:-0.5px}
+.logo em{font-style:italic;color:var(--her)}
+.wk-pill{font-size:14px;background:var(--bg);border:1px solid var(--brd);border-radius:20px;padding:4px 10px;color:var(--mut);font-weight:500}
+.tabs{display:flex}
+.tab{flex:1;padding:10px 4px;border:none;background:none;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;color:var(--mut);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;letter-spacing:.02em}
+.tab.on{color:var(--txt);border-bottom-color:var(--txt)}
+.pg{display:none;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px 40px}
+.pg.on{display:block}
+.psw{display:flex;gap:8px;margin-bottom:14px}
+.pbtn{flex:1;padding:11px 6px;border-radius:var(--rs);border:1.5px solid var(--brd);background:var(--surf);font-family:'DM Sans',sans-serif;font-size:16px;font-weight:600;cursor:pointer;transition:all .2s;color:var(--mut)}
+.pbtn.her.on{background:var(--her-l);border-color:var(--her-m);color:var(--her-d)}
+.pbtn.him.on{background:var(--him-l);border-color:var(--him-m);color:var(--him-d)}
+.phase-row{display:flex;gap:8px;margin-bottom:18px}
+.phbtn{flex:1;padding:9px;border-radius:var(--rs);border:1px solid var(--brd);background:var(--surf);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:all .2s;color:var(--mut)}
+.phbtn.on{background:var(--txt);color:#fff;border-color:var(--txt)}
+.bnr{border-radius:var(--r);padding:13px 15px;margin-bottom:12px}
+.bnr.van{background:var(--van-l);border:1px solid var(--van-m)}
+.bnr.warn{background:var(--warn-l);border:1px solid #FFCC80}
+.bnr.run{background:var(--run-l);border:1px solid var(--run-m)}
+.bnr-t{font-size:16px;font-weight:600;margin-bottom:4px}
+.bnr-t.van{color:var(--van)}
+.bnr-t.warn{color:var(--warn)}
+.bnr-t.run{color:var(--run)}
+.bnr-b{font-size:15px;line-height:1.5;color:var(--mut)}
+.sec-lbl{font-size:14px;font-weight:600;letter-spacing:.06em;color:var(--mut);text-transform:uppercase;margin-bottom:10px;margin-top:4px}
+.dcard{background:var(--surf);border:1px solid var(--brd);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
+.dcard-hdr{padding:14px 15px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:10px}
+.dcard-hdr:active{background:var(--bg)}
+.dleft{display:flex;align-items:center;gap:11px;flex:1;min-width:0}
+.dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.dname{font-size:17px;font-weight:600;color:var(--txt)}
+.dsub{font-size:15px;color:var(--mut);margin-top:2px}
+.dcnt{font-size:14px;background:var(--bg);border:1px solid var(--brd);border-radius:10px;padding:3px 8px;color:var(--mut);white-space:nowrap;flex-shrink:0}
+.dchev{font-size:15px;color:var(--mut);transition:transform .2s;flex-shrink:0}
+.dcard.open .dchev{transform:rotate(180deg)}
+.dbody{display:none;border-top:1px solid var(--brd)}
+.dcard.open .dbody{display:block}
+.exrow{padding:12px 15px;border-bottom:1px solid var(--brd);cursor:pointer}
+.exrow:last-child{border-bottom:none}
+.exrow:active{background:var(--bg)}
+.extop{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.exname{font-size:16px;font-weight:600;color:var(--txt)}
+.expill{font-size:14px;background:var(--bg);border-radius:8px;padding:3px 8px;color:var(--mut);white-space:nowrap;flex-shrink:0}
+.exnote{font-size:15px;color:var(--mut);margin-top:3px;line-height:1.4}
+.exdetail{display:none;margin-top:10px;padding:12px;background:var(--bg);border-radius:var(--rs)}
+.exrow.open .exdetail{display:block}
+.steps-lbl{font-size:13px;font-weight:600;letter-spacing:.06em;color:var(--mut);text-transform:uppercase;margin-bottom:8px}
+.steps{list-style:none;counter-reset:s}
+.steps li{counter-increment:s;display:flex;gap:9px;margin-bottom:6px;font-size:15px;line-height:1.45;color:var(--txt)}
+.steps li::before{content:counter(s);background:var(--surf);border:1px solid var(--brd);min-width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;margin-top:1px}
+.extip{margin-top:10px;padding:10px 12px;background:var(--surf);border-left:3px solid var(--her-m);font-size:15px;color:var(--mut);line-height:1.5}
+.extip.him{border-left-color:var(--him-m)}
+.extip.van{border-left-color:var(--van-m)}
+.search-wrap{position:relative;margin-bottom:12px}
+.search-wrap input{width:100%;padding:11px 14px;border:1px solid var(--brd);border-radius:var(--rs);background:var(--surf);font-family:'DM Sans',sans-serif;font-size:17px;color:var(--txt);outline:none}
+.search-wrap input:focus{border-color:#aaa}
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.fbtn{padding:6px 12px;border-radius:20px;border:1px solid var(--brd);background:var(--surf);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;color:var(--mut);cursor:pointer;transition:all .2s}
+.fbtn.on{background:var(--txt);color:#fff;border-color:var(--txt)}
+.ex-badge{font-size:13px;padding:2px 7px;border-radius:8px;font-weight:600;flex-shrink:0}
+.ex-badge.her{background:var(--her-l);color:var(--her-d)}
+.ex-badge.him{background:var(--him-l);color:var(--him-d)}
+.ex-badge.both{background:var(--van-l);color:var(--van)}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.stat{background:var(--surf);border:1px solid var(--brd);border-radius:var(--r);padding:14px 15px;text-align:center}
+.stat-lbl{font-size:14px;color:var(--mut);font-weight:500;margin-bottom:6px}
+.stat-val{font-size:32px;font-family:'DM Serif Display',serif;color:var(--txt)}
+.wk-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
+.wk-cell{background:var(--surf);border:1px solid var(--brd);border-radius:var(--rs);padding:10px 6px;text-align:center;cursor:pointer;transition:all .2s}
+.wk-cell.cur{border-color:var(--van);background:var(--van-l)}
+.wk-num{font-size:16px;font-weight:600;color:var(--txt)}
+.wk-ph{font-size:13px;color:var(--mut);margin-top:2px}
+.wk-cell.cur .wk-num{color:var(--van)}
+.wk-cell.cur .wk-ph{color:var(--van-m)}
+.chal-card{background:var(--surf);border:1px solid var(--brd);border-radius:var(--r);padding:15px;margin-bottom:14px}
+.chal-title{font-size:17px;font-weight:600;margin-bottom:14px}
+.prog-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.prog-lbl{font-size:15px;color:var(--mut);min-width:76px}
+.prog-track{flex:1;height:6px;background:var(--brd);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;border-radius:3px;transition:width .3s}
+.fill-s{background:var(--van)}
+.fill-h{background:var(--run)}
+.prog-num{font-size:15px;font-weight:600;color:var(--txt);min-width:42px;text-align:right}
+.stepper{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.st-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--brd);background:var(--bg);font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--txt);line-height:1;flex-shrink:0}
+.st-btn:active{background:var(--brd)}
+.st-val{font-size:15px;font-weight:600;min-width:56px;text-align:center;color:var(--txt)}
+.st-lbl{font-size:15px;color:var(--mut)}
+.reset-btn{width:100%;margin-top:12px;padding:10px;border:1px solid var(--brd);border-radius:var(--rs);background:var(--bg);font-family:'DM Sans',sans-serif;font-size:16px;font-weight:500;color:var(--mut);cursor:pointer}
+.reset-btn:active{background:var(--brd)}
+.wk-btns{display:flex;gap:8px}
+.wk-btn{flex:1;padding:11px;border:1px solid var(--brd);border-radius:var(--rs);background:var(--surf);font-family:'DM Sans',sans-serif;font-size:16px;font-weight:500;cursor:pointer;color:var(--txt)}
+.wk-btn:active{background:var(--bg)}
+.tip-card{background:var(--surf);border:1px solid var(--brd);border-radius:var(--r);padding:14px 15px;margin-bottom:10px}
+.tip-t{font-size:16px;font-weight:600;margin-bottom:5px}
+.tip-b{font-size:16px;color:var(--mut);line-height:1.55}
+.empty{text-align:center;padding:3rem 1rem;color:var(--mut);font-size:17px}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="logo">J<em>&amp;</em>E Training</div>
+    <div class="wk-pill" id="wk-badge">Week 1 of 8</div>
+  </div>
+  <div class="tabs">
+    <button class="tab on" onclick="showPg('plan',this)">Plan</button>
+    <button class="tab" onclick="showPg('exercises',this)">Exercises</button>
+    <button class="tab" onclick="showPg('tracker',this)">Tracker</button>
+    <button class="tab" onclick="showPg('vanja',this)">Vanja</button>
+    <button class="tab" onclick="showPg('tips',this)">Tips</button>
+  </div>
+</div>
+<div id="pg-plan" class="pg on">
+  <div class="psw">
+    <button class="pbtn her on" onclick="setPlan('her',this)">Her plan</button>
+    <button class="pbtn him" onclick="setPlan('him',this)">His plan</button>
+  </div>
+  <div class="phase-row">
+    <button class="phbtn on" onclick="setPhase('a',this)">Phase A — weeks 1–4</button>
+    <button class="phbtn" onclick="setPhase('b',this)">Phase B — weeks 5–8</button>
+  </div>
+  <div id="plan-content"></div>
+</div>
+<div id="pg-exercises" class="pg">
+  <div class="search-wrap"><input type="search" placeholder="Search exercises..." id="ex-search" oninput="renderEx()"></div>
+  <div class="filter-row" id="cat-filters"></div>
+  <div id="ex-list"></div>
+</div>
+<div id="pg-tracker" class="pg">
+  <div class="sec-lbl">Your week</div>
+  <div class="stat-grid">
+    <div class="stat"><div class="stat-lbl">Current week</div><div class="stat-val" id="t-wk">1</div></div>
+    <div class="stat"><div class="stat-lbl">Phase</div><div class="stat-val" id="t-ph" style="font-size:24px;padding-top:4px">A</div></div>
+  </div>
+  <div class="wk-grid" id="wk-grid"></div>
+  <div class="wk-btns" style="margin-bottom:20px">
+    <button class="wk-btn" onclick="adjWk(-1)">&#8592; Previous week</button>
+    <button class="wk-btn" onclick="adjWk(1)">Next week &#8594;</button>
+  </div>
+  <div class="sec-lbl">Daily Vanja challenge</div>
+  <div class="chal-card">
+    <div class="chal-title">Squat &amp; hang tracker</div>
+    <div class="prog-row"><span class="prog-lbl">Squat (min)</span><div class="prog-track"><div class="prog-fill fill-s" id="sq-bar" style="width:0%"></div></div><span class="prog-num" id="sq-lbl">0 / 10</span></div>
+    <div class="prog-row" style="margin-bottom:14px"><span class="prog-lbl">Hang (sec)</span><div class="prog-track"><div class="prog-fill fill-h" id="hg-bar" style="width:0%"></div></div><span class="prog-num" id="hg-lbl">0 / 60</span></div>
+    <div class="stepper"><button class="st-btn" onclick="adj('sq',-1)">&#8722;</button><span class="st-val" id="sq-val">0 min</span><button class="st-btn" onclick="adj('sq',1)">+</button><span class="st-lbl">squat minutes</span></div>
+    <div class="stepper"><button class="st-btn" onclick="adj('hg',-5)">&#8722;</button><span class="st-val" id="hg-val">0 sec</span><button class="st-btn" onclick="adj('hg',5)">+</button><span class="st-lbl">hang seconds</span></div>
+    <button class="reset-btn" onclick="resetDaily()">Reset today</button>
+  </div>
+</div>
+<div id="pg-vanja" class="pg">
+  <div class="bnr van" style="margin-bottom:16px">
+    <div class="bnr-t van">About Vanja Moves</div>
+    <div class="bnr-b">Australian movement philosopher and mobility expert (@vanja.moves on Instagram &amp; YouTube). Philosophy: train MOVEMENT not just muscles. Her Making Moves podcast and MovesMethod program (~$27) are excellent companions to this plan.</div>
+  </div>
+  <div class="sec-lbl">Warm-up — every session (both of you)</div>
+  <div id="vanja-warmup"></div>
+  <div class="sec-lbl" style="margin-top:6px">Movement finisher — after every gym session (her)</div>
+  <div class="bnr van" style="margin-bottom:10px"><div class="bnr-b" style="color:var(--van)">10–12 minutes after your gym workout. Deep toning through ranges no machine reaches.</div></div>
+  <div id="vanja-finisher"></div>
+  <div class="sec-lbl" style="margin-top:6px">His spine-safe Vanja moves</div>
+  <div class="bnr warn" style="margin-bottom:10px"><div class="bnr-b" style="color:var(--warn)">Adapted for post-discectomy recovery. The passive hang decompresses the spine — excellent for disc recovery. Stop if any nerve pain.</div></div>
+  <div id="vanja-him"></div>
+  <div class="sec-lbl" style="margin-top:6px">Daily challenge — every day, both of you</div>
+  <div class="tip-card"><div class="tip-t" style="color:var(--van)">Squat &amp; hang challenge</div><div class="tip-b">Accumulate 10 minutes of passive resting squat throughout the day. Accumulate 1 minute of passive hang from any bar. Break into small doses — TV, teeth brushing, cooking. Track it in the Tracker tab. Life-changing over 8 weeks.</div></div>
+</div>
+<div id="pg-tips" class="pg">
+  <div class="sec-lbl">Run day progression</div>
+  <div class="bnr run" style="margin-bottom:8px"><div class="bnr-t run">Her run plan</div><div class="bnr-b">Wks 1–2: 20–25 min easy jog. Wks 3–4: 25–30 min + 2x 2-min faster intervals. Wks 5–6: 30 min + 3x 3-min intervals. Wks 7–8: 30–35 min non-stop.</div></div>
+  <div class="bnr run"><div class="bnr-t run">His run plan</div><div class="bnr-b">Wks 1–4: Brisk walk or easy 20 min jog, no sprinting. Wks 5–8: Easy 25–30 min jog. Alternative: stationary bike or cross trainer — great for disc recovery.</div></div>
+  <div class="bnr warn" style="margin-top:10px;margin-bottom:16px"><div class="bnr-t warn">His recovery reminder</div><div class="bnr-b">Get surgeon/physio clearance before starting. No deadlifts, no barbell squats, no overhead barbell press, no box jumps. Stop if sharp pain, radiating leg pain, numbness or tingling occurs.</div></div>
+  <div class="sec-lbl">General tips</div>
+  <div id="gen-tips"></div>
+</div>
+</div>
+<script>
+var plan='her',phase='a',week=1,sq=0,hg=0;
+var HER='her',HIM='him',BOTH='both';
+
+var plans={her:{a:{
+  day1:{label:'Day 1 — Lower body',sub:'Glutes, quads, calves, inner thighs',color:'#C2185B',exs:[
+    {n:'Goblet squat',s:'4',r:'12-15',note:'Drive heels, squeeze glutes at top',steps:['Hold dumbbell at chest height','Feet shoulder-width, toes out 30 degrees','Lower until thighs parallel to floor','Push through heels to stand','Squeeze glutes firmly at top'],tip:'Use elbows to push knees out at the bottom for deeper hip opening. Your warm-up squat carries directly into this.'},
+    {n:'Romanian deadlift',s:'3',r:'12-15',note:'Hip hinge - feel the hamstring stretch',steps:['Hold dumbbells in front of thighs','Push hips BACK, not down','Slide weights down your legs','Stop when you feel hamstring stretch','Drive hips forward to return and squeeze glutes'],tip:'This is a hip hinge, not a squat. The knee bend stays soft and constant throughout.'},
+    {n:'Leg press',s:'3',r:'15',note:'Full range - go deep',steps:['Sit fully back, feet shoulder-width on platform','Lower until knees at 90 degrees or deeper','Press platform away through full foot','Keep soft bend at top, no lockout'],tip:'Higher foot position means more glutes. Lower foot means more quads. Experiment each session.'},
+    {n:'Hip thrust',s:'4',r:'15-20',note:'Hold 1-sec squeeze at top',steps:['Upper back against bench, weight across hips','Feet flat, hip-width, toes slightly out','Drive through heels and thrust hips up','Squeeze glutes hard and hold 1 full second','Lower slowly, hips hover and never rest'],tip:'The 1-second squeeze at the top is everything. You should feel it in your glutes, not your lower back.'},
+    {n:'Standing calf raises',s:'4',r:'20-25',note:'3-second lowering phase',steps:['Stand on edge of a step if available','Rise to tiptoes, full range','Hold 1 sec at top','Lower slowly over 3 full seconds','Go below parallel on the step'],tip:'The slow 3-second lowering is what builds the calf shape. Most people rush this and get nothing from it.'},
+    {n:'Seated calf raises',s:'3',r:'20',note:'Targets soleus (lower calf)',steps:['Sit on machine or bench, weight on knees','Raise heels as high as possible','Hold briefly at top','Lower slowly past start position'],tip:'Different muscle to standing raises. Both are needed for full shapely calf development.'},
+    {n:'Cable inner thigh',s:'3',r:'15',note:'Control the return slowly',steps:['Attach cable to ankle, stand sideways to machine','Sweep leg across body against resistance','Squeeze inner thigh at end point','Control the return, do not let cable snap back','All reps one side then switch'],tip:'The slow return is the working part. Resist the cable on the way back.'}
+  ]},
+  day2:{label:'Day 2 — Upper body',sub:'Arms, shoulders, back, chest',color:'#C2185B',exs:[
+    {n:'Lat pulldown',s:'3',r:'12-15',note:'Pull to upper chest, squeeze blades',steps:['Wide overhand grip on bar','Lean back slightly 10 to 15 degrees','Pull bar down to upper chest','Squeeze shoulder blades together firmly','Arms fully extend on return'],tip:'Think elbows to back pockets to engage the lats. Most people pull too far down.'},
+    {n:'Dumbbell shoulder press',s:'3',r:'12-15',note:'Light to moderate, fully controlled',steps:['Dumbbells at shoulder height, palms forward','Press upward until arms nearly extended','Lower slowly back to shoulders','Keep core braced throughout'],tip:'Lighter than you think. Form first, weight second. Seated version removes lower back strain.'},
+    {n:'Cable chest fly',s:'3',r:'15',note:'Opens chest, improves posture',steps:['Cables set at chest height, stand in middle','Arms out wide, soft bend at elbows','Bring hands together in front of chest','Slowly open back out, feel the chest stretch'],tip:'Feel the stretch across the chest at the back of the movement. That stretch builds the muscle.'},
+    {n:'Tricep pushdown',s:'3',r:'15',note:'Elbows pinned to sides throughout',steps:['Cable bar at chest height','Elbows tucked tight to sides, they do not move','Push bar down until arms straight','Squeeze hard at bottom for 1 second','Let bar rise slowly, controlled return'],tip:'If your elbows flare out you lose the tricep focus entirely. Keep them pinned. This tones the back of the arm.'},
+    {n:'Dumbbell bicep curl',s:'3',r:'12-15',note:'3-second slow lowering',steps:['Dumbbells at sides, palms forward','Curl up, squeeze at top','Lower over 3 full seconds, very slow','No swinging your back or hips'],tip:'The slow lowering phase builds more tone than the curl up. Make every rep count.'},
+    {n:'Bent-over dumbbell row',s:'3',r:'12',note:'Flat back, elbow to hip',steps:['Hinge forward, back flat at 45 degrees','Dumbbells hanging straight down','Pull elbows back and up to hip level','Squeeze at top, lower slowly'],tip:'Back flat like a table. A rounded back transfers load away from the muscles you are targeting.'},
+    {n:'Lateral raises',s:'3',r:'15',note:'Very light, form only',steps:['Very light dumbbells at sides','Raise arms to sides like wings','Lead with elbows not your hands','Stop at shoulder height, no higher','Lower over 2 to 3 seconds'],tip:'This builds the shoulder cap that defines the arm line. Always lighter than expected. Never swing.'}
+  ]},
+  day3:{label:'Day 3 — Full body circuit',sub:'Kettlebell, lunges, core, glutes',color:'#C2185B',exs:[
+    {n:'Kettlebell swing',s:'4',r:'20',note:'Power from hips, arms just hold',steps:['Feet shoulder-width, KB between feet','Hinge hips back, swing KB back between legs','Snap hips forward explosively','Arms carry the KB to chest height','Hinge back immediately for next rep'],tip:'This is a hip snap movement. The power comes from your hips, not your arms or shoulders.'},
+    {n:'Walking lunge',s:'3',r:'12 each leg',note:'Dumbbells for extra load',steps:['Hold dumbbells at sides','Step forward into lunge, control the descent','Back knee lowers toward floor','Push through front heel to step forward','Alternate legs as you travel forward'],tip:'Keep your torso upright. Leaning forward shifts load off the glutes.'},
+    {n:'Incline push-up',s:'3',r:'12-15',note:'Hands on bench reduces difficulty',steps:['Hands on bench wider than shoulders','Body straight from head to heels, no sagging','Lower chest toward bench','Push back up fully'],tip:'Steeper angle means easier. Progress to flat floor by Phase B.'},
+    {n:'Plank',s:'3',r:'30-45 sec',note:'Squeeze everything including glutes',steps:['Forearms on floor, elbows under shoulders','Body in straight line, squeeze core, glutes, quads','Breathe steadily','Do not let hips drop or pike'],tip:'Most people only squeeze their stomach. Squeeze glutes and quads too, full body tension.'},
+    {n:'Cable glute kickback',s:'3',r:'15 each',note:'Squeeze hard at the top',steps:['Cable attached to ankle, face machine','Hold cable stack for balance','Kick leg back and up, squeeze glute at top','Control the return, do not swing'],tip:'Lean slightly forward from the hip for maximum glute range of motion.'},
+    {n:'Bicycle crunch',s:'3',r:'20 each side',note:'Slow and controlled',steps:['Lie on back, hands lightly behind head','Both knees raised to tabletop','Extend one leg while rotating shoulder to other knee','Slow and controlled, not a race'],tip:'Slow is better. Fast bicycle crunches use momentum not muscle. Feel the oblique working.'},
+    {n:'Step-ups',s:'3',r:'12 each leg',note:'Targets lower quad above knee',steps:['Stand before a bench, dumbbells at sides','Step one foot fully onto bench','Drive through that heel to stand on bench','Lower back foot with control','Complete all reps one side then switch'],tip:'Directly targets the lower quad just above the knee, your specific focus area.'}
+  ]}
+},b:{
+  day1:{label:'Day 1 — Lower body (Phase B)',sub:'Sumo, single-leg, curtsy',color:'#C2185B',exs:[
+    {n:'Sumo squat',s:'4',r:'12-15',note:'Wide stance, inner thigh focus',steps:['Feet much wider than shoulder-width, toes 45 degrees out','Hold dumbbell or barbell','Sit straight down between your feet','Knees track over toes throughout','Drive through both heels to stand, squeeze at top'],tip:'The wide stance loads the inner thighs more than regular squats. Key for the cellulite-prone upper inner leg.'},
+    {n:'Single-leg RDL',s:'3',r:'12 each',note:'More glute activation',steps:['Hold dumbbell in opposite hand to standing leg','Hinge forward, rear leg lifts behind you as counterbalance','Feel hamstring stretch on standing leg','Return by driving that hip forward','Balance challenge is part of the benefit'],tip:'The instability recruits more glute. Wobbling at first is normal and expected.'},
+    {n:'Hack squat machine',s:'3',r:'15',note:'Different quad angle to leg press',steps:['Set up on machine per instructions','Feet shoulder-width, toes slightly out','Lower until thighs parallel','Drive through heels to return'],tip:'Compared to leg press this angle hits outer quad more, adds shape variety over 8 weeks.'},
+    {n:'Glute bridge with band',s:'4',r:'20',note:'Band above knees, push out',steps:['Lie on back, resistance band just above knees','Push knees slightly outward against band throughout','Drive hips up through heels','Squeeze glutes hard, hold 1 second','Lower slowly, hips hover'],tip:'The band activates the outer glute (gluteus medius) and creates the side curve that lifts the hip.'},
+    {n:'Donkey calf raise',s:'3',r:'20',note:'New angle, keeps calves responding',steps:['Lean forward, hands on bench at hip height','Weight plate on lower back or use machine','Rise onto tiptoes fully','Lower slowly all the way down'],tip:'The forward lean changes the calf angle for new muscle stimulus after Phase A.'},
+    {n:'Curtsy lunge',s:'3',r:'12 each',note:'Outer glute and inner thigh',steps:['Stand hip-width, dumbbells at sides','Step one foot back and diagonally across','Lower back knee toward floor','Front knee stays over front foot','Push through front heel to return'],tip:'The diagonal cross loads the gluteus medius specifically, the outer glute curve and inner thigh shape.'}
+  ]},
+  day2:{label:'Day 2 — Upper body (Phase B)',sub:'Arnold press, overhead tricep',color:'#C2185B',exs:[
+    {n:'Seated cable row',s:'3',r:'12-15',note:'Shoulder blade squeeze',steps:['Sit at machine, feet on platform, sit tall','Pull handle to lower abdomen','Squeeze shoulder blades together firmly at end','Hold 1 second','Extend arms fully for back stretch'],tip:'The blade squeeze is the key. Most people just move their arms. Your back should be doing the work.'},
+    {n:'Arnold press',s:'3',r:'12',note:'All 3 shoulder heads in one move',steps:['Hold dumbbells at chest, palms facing you','As you press up, rotate palms forward','Full extension overhead at top','Reverse the rotation on the way down'],tip:'Hits all three deltoid heads in one movement. More complete than a regular shoulder press.'},
+    {n:'Incline dumbbell press',s:'3',r:'12-15',note:'Upper chest and posture',steps:['Set bench to 30 to 45 degree incline','Dumbbells at chest, press upward','Slight bend at top, no lockout','Lower until slight stretch in chest'],tip:'Upper chest development creates a lifted look and significantly improves posture.'},
+    {n:'Overhead tricep extension',s:'3',r:'15',note:'Targets long head, THE underarm move',steps:['Hold one dumbbell with both hands overhead','Elbows beside ears, they do not move','Lower weight slowly behind head','Feel the stretch at back of upper arm','Press back up to full overhead extension'],tip:'THE Phase B arm move. Specifically targets the long head of the tricep, the saggy underarm area.'},
+    {n:'Hammer curl',s:'3',r:'12-15',note:'Different angle to regular curl',steps:['Dumbbells at sides, thumbs pointing up (neutral grip)','Curl up keeping thumbs up throughout','Squeeze at top','Lower over 3 seconds'],tip:'Neutral grip hits the brachialis muscle under the bicep and adds thickness and definition.'},
+    {n:'Single-arm dumbbell row',s:'3',r:'12 each',note:'Greater range than both-arm rows',steps:['One knee and hand on bench for support','Other hand holds dumbbell hanging down','Pull elbow up and back to hip','Squeeze firmly at top','Full extension at bottom, feel the lat stretch'],tip:'Greater range of motion than both-arm rows. Really feel the stretch at the bottom.'}
+  ]},
+  day3:{label:'Day 3 — Full body (Phase B)',sub:'More challenge, heavier loads',color:'#C2185B',exs:[
+    {n:'Squat to press',s:'3',r:'12',note:'Full body in one movement',steps:['Hold dumbbells at shoulder height','Lower into squat, control the descent','As you drive to stand, press dumbbells overhead','Lower dumbbells back to shoulders as you squat'],tip:'Combines leg power with shoulder press. Efficient and elevates heart rate.'},
+    {n:'Reverse lunge',s:'3',r:'12 each',note:'More glute than forward lunge',steps:['Dumbbells at sides','Step backward into lunge, not forward','Back knee lowers toward floor','Front shin stays vertical','Push through front heel to return'],tip:'Easier on the knees than forward lunges and more glute-focused. A great Phase B progression.'},
+    {n:'Push-up',s:'3',r:'10-15',note:'Progress from incline if ready',steps:['Hands shoulder-width on floor','Body straight, core and glutes tight throughout','Lower chest to floor with control','Push back up fully, elbows track back not flared'],tip:'Aim for flat floor by week 7 to 8. If still needed a low bench is fine.'},
+    {n:'Side plank',s:'3',r:'30 sec each',note:'Waist and oblique toning',steps:['Lie on side, forearm on floor under shoulder','Hips stacked, body in straight line','Lift hips off floor and hold','Breathe steadily, do not hold breath'],tip:'Builds the lateral waist line. Focus on lifting the hip high, do not let it sag.'},
+    {n:'Band lateral walk',s:'3',r:'15 each way',note:'Outer glute activation',steps:['Band just above knees, slight squat position','Step sideways maintaining band tension','Do not let feet come fully together','Complete all steps one way then reverse'],tip:'Activates the gluteus medius before bigger movements. Great injury prevention too.'},
+    {n:'Box step-up (heavier)',s:'3',r:'12 each',note:'Increase weight from Phase A',steps:['Heavier dumbbells than Phase A','Step fully onto bench, drive through heel','Do not push off with back foot','Lower with control, do not drop'],tip:'More load means more lower quad development right above the knee, your target area.'}
+  ]}
+}},
+him:{a:{
+  day1:{label:'Day 1 — Legs (machine)',sub:'All machine, spine fully supported',color:'#1565C0',exs:[
+    {n:'Leg press',s:'4',r:'10-12',note:'No spinal load, safe for recovery',steps:['Sit fully back against pad, feet shoulder-width','Lower until knees at 90 degrees or deeper','Press platform away through full foot','Soft bend at top, no lockout'],tip:'No spinal compression, safe at all recovery stages. Feet higher means more glutes, lower means more quads.'},
+    {n:'Leg extension',s:'3',r:'12-15',note:'Quad isolation, spine supported',steps:['Adjust pad to sit just above ankles','Extend legs fully, squeeze quad at top','Lower slowly back down'],tip:'Full isolation with zero spinal load. Build this progressively each week.'},
+    {n:'Lying leg curl',s:'3',r:'12-15',note:'Lying position, no spinal concern',steps:['Lie face down on machine','Pad sits just above heels','Curl heels toward glutes','Squeeze hamstring at top','Lower slowly'],tip:'The lying position means absolutely zero spinal load. Focus on the hamstring squeeze.'},
+    {n:'Hip abductor machine',s:'3',r:'15',note:'Outer hip, seated and supported',steps:['Sit in machine, pads on outside of knees','Push knees apart against resistance','Control the return, do not let it snap back'],tip:'Builds outer hip and glute medius safely. Fully seated and spine-supported.'},
+    {n:'Standing calf raises',s:'4',r:'15',note:'Hold rail for balance if needed',steps:['Shoulders under machine pads','Rise onto tiptoes, full range','Hold 1 second at top','Lower slowly past start'],tip:'Full range of motion. The machine provides stability during recovery.'},
+    {n:'Glute bridge',s:'3',r:'15',note:'Zero spinal compression',steps:['Lie on back, knees bent, feet flat','Plate or weight on hips if desired','Drive hips up through heels','Squeeze glutes hard at top, hold 1 sec','Lower slowly'],tip:'Posterior chain work with zero spinal compression. Safe at any recovery stage.'},
+    {n:'Wall sit',s:'3',r:'30-45 sec',note:'Isometric, no spinal load at all',steps:['Back flat against wall','Slide down until thighs parallel to floor','Hold and breathe steadily','Keep back pressed against wall throughout'],tip:'Pure isometric quad work with absolutely no spinal loading whatsoever.'}
+  ]},
+  day2:{label:'Day 2 — Upper body',sub:'Seated where possible, no overhead bar',color:'#1565C0',exs:[
+    {n:'Seated cable row',s:'4',r:'10-12',note:'Back strength, seated',steps:['Sit at machine, feet on platform','Grip handle and sit up tall','Pull to lower abdomen','Squeeze shoulder blades firmly at end','Extend arms fully for back stretch'],tip:'Safe and effective. The shoulder blade squeeze at the end is where the work happens.'},
+    {n:'Chest press machine',s:'4',r:'10-12',note:'Spine fully supported throughout',steps:['Adjust seat so handles are at chest height','Keep back against pad throughout','Push forward until arms near-extended','Return slowly, feel the chest stretch'],tip:'Machine stabilises the spine completely. Preferred over barbell bench press during recovery.'},
+    {n:'Lat pulldown',s:'3',r:'10-12',note:'Back width, no spinal loading',steps:['Wide overhand grip on bar','Lean back slightly','Pull bar to upper chest','Squeeze shoulder blades together','Arms fully extend on return'],tip:'Building back width safely. Think elbows to back pockets for better lat engagement.'},
+    {n:'Lateral raises (seated)',s:'3',r:'12-15',note:'Seated for more control',steps:['Seated on bench, dumbbells at sides','Raise to sides like wings to shoulder height','Lead with elbows, not hands','Lower over 2 to 3 seconds'],tip:'Seated reduces temptation to swing the back for momentum.'},
+    {n:'Bicep curl (seated)',s:'3',r:'10-12',note:'Seated, no back swing',steps:['Sit on bench, dumbbells at sides','Curl up, squeeze at top','Lower over 3 full seconds','No swinging the back'],tip:'Seated removes lower back compensation entirely. Pure bicep work.'},
+    {n:'Tricep pushdown',s:'3',r:'12',note:'Stand tall, no forward lean',steps:['Cable at chest height, bar or rope','Elbows pinned to sides, fixed','Push down until arms straight','Squeeze at bottom 1 second','Return slowly'],tip:'Maintain upright posture throughout. No leaning forward during recovery.'},
+    {n:'Chest fly machine',s:'3',r:'12-15',note:'Chest isolation, spine neutral',steps:['Set seat so handles are at chest level','Bring handles together in front of chest','Squeeze pecs at end point','Return slowly, feel the stretch'],tip:'Isolation movement with zero spinal concern. Focus on the chest squeeze.'}
+  ]},
+  day3:{label:'Day 3 — Core rehab',sub:'Physio-approved spine-safe movements',color:'#1565C0',exs:[
+    {n:'Dead bug',s:'3',r:'10 each side',note:'Lower back FLAT throughout, critical',steps:['Lie on back, arms straight up, knees at 90 degrees','Press lower back completely flat to floor, this must stay flat','Slowly extend one arm overhead AND opposite leg out','Go only as far as back remains flat, stop before it lifts','Return to centre, repeat other side'],tip:'Gold standard post-discectomy exercise. If lower back lifts off the floor you have gone too far, reduce range.'},
+    {n:'Bird dog',s:'3',r:'10 each side',note:'Hips level, no rotation',steps:['On hands and knees, wrists under shoulders, knees under hips','Spine neutral, not arched or rounded','Extend opposite arm forward AND opposite leg back simultaneously','Hold 2 to 3 seconds, hips level throughout','Return slowly, repeat other side'],tip:'A glass of water on your lower back should not spill. That is the standard. Slow and controlled.'},
+    {n:'Band pull-apart',s:'3',r:'15',note:'Postural muscles, rear shoulder',steps:['Hold band at chest width, arms straight out','Pull band apart toward chest','Squeeze shoulder blades together firmly','Return with control'],tip:'Rebuilds the rear shoulder and postural muscles often weakened after surgery.'},
+    {n:'Stationary bike',s:'1',r:'10 min',note:'Low impact, great for disc recovery',steps:['Set resistance to comfortable level','Maintain steady pace','Upright posture, do not hunch forward','Controlled breathing throughout'],tip:'One of the best cardio choices during disc recovery. Zero spinal impact whatsoever.'},
+    {n:'Hip flexor stretch',s:'3',r:'45 sec each',note:'Essential post-discectomy',steps:['Kneel on one knee, other foot forward','Shift weight forward gently until stretch felt in front of rear hip','Hold 45 seconds','Switch sides'],tip:'Tight hip flexors pull on the lumbar spine and slow recovery. One of the most important daily stretches.'}
+  ]}
+},b:{
+  day1:{label:'Day 1 — Legs (progressive)',sub:'Heavier, same spine-safe principles',color:'#1565C0',exs:[
+    {n:'Leg press (heavier)',s:'4',r:'8-10',note:'Add load from Phase A baseline',steps:['Same setup as Phase A','Add 5 to 10kg from where you finished Phase A','Controlled full range of motion','No lockout at top'],tip:'Progressive overload with zero spinal compression. Track what you lift and beat it each week.'},
+    {n:'Hack squat machine',s:'3',r:'10',note:'Safe squat progression',steps:['Back and hips against pads of machine','Feet shoulder-width, toes slightly out','Lower until thighs parallel','Machine supports spine throughout, push through heels'],tip:'A safe bridge toward real squat movements. The machine keeps the spine fully protected.'},
+    {n:'Lying leg curl (heavier)',s:'4',r:'10-12',note:'Progress the load',steps:['Same setup as Phase A','Increase weight by 2.5 to 5kg','Focus on hamstring squeeze at top','Control the lowering phase, slow'],tip:'Hamstring strength supports spinal stability. Build this progressively every session.'},
+    {n:'Single-leg press',s:'3',r:'10 each',note:'Unilateral, corrects imbalances',steps:['One foot on platform, centre height','Lower until 90 degrees at the knee','Press through heel, fully controlled','Complete all reps one side then switch'],tip:'Unilateral work identifies and corrects strength imbalances without adding spinal load.'},
+    {n:'Calf press on leg press',s:'4',r:'20',note:'Heavy calf, fully supported',steps:['Sit in leg press machine, extend legs','Position just toes on bottom edge of platform','Raise heels by pushing platform away','Lower toes below start position, full range'],tip:'Heavy calf work in a fully supported position. Load it up.'},
+    {n:'Glute bridge with plate',s:'3',r:'15',note:'Add weight plate as strength returns',steps:['Lie on back, plate on hips','Same technique as Phase A','Drive through heels, squeeze at top','Build load gradually'],tip:'Progressive loading of the glute bridge. Posterior chain strength without spinal compression.'}
+  ]},
+  day2:{label:'Day 2 — Upper body (heavier)',sub:'Push for progressive overload',color:'#1565C0',exs:[
+    {n:'Chest press machine (heavier)',s:'4',r:'8-10',note:'Beat Phase A weights',steps:['Add load from Phase A baseline','Same technique, back against pad','Controlled press, full range','Slow return, feel the chest stretch'],tip:'Machine protects spine at all loads. Focus on beating Phase A weights.'},
+    {n:'Wide-grip lat pulldown',s:'4',r:'8-10',note:'Wider grip for more back width',steps:['Grip wider than Phase A','Same pull-to-upper-chest technique','Squeeze shoulder blades harder','Arms extend fully on return'],tip:'Wider grip targets more of the lat width fibres for a broader back.'},
+    {n:'Seated dumbbell shoulder press',s:'3',r:'10-12',note:'Seated, back supported',steps:['Sit on bench with back support if available','Dumbbells at shoulder height','Press overhead, controlled','Lower slowly back to shoulders'],tip:'Seated removes all spinal compression. Never use standing barbell overhead press during recovery.'},
+    {n:'Skull crusher (lying)',s:'3',r:'12',note:'Lying, no spinal concern',steps:['Lie on bench, bar or dumbbells above chest','Lower weight toward forehead slowly','Upper arms stay vertical throughout','Press back up to start'],tip:'Lying position means zero spinal load. Good tricep mass builder for Phase B.'},
+    {n:'Face pull',s:'3',r:'15',note:'Rotator cuff, non-negotiable',steps:['Cable at face height, rope attachment','Pull toward face, elbows high and wide','Hands beside ears at end point','Return slowly with control'],tip:'Exceptional for long-term shoulder health post-surgery. Should become a permanent staple.'},
+    {n:'Incline dumbbell press',s:'3',r:'10',note:'Upper chest, seated and supported',steps:['Set bench to 30 to 45 degree incline','Press from chest upward','Slight bend at top, no lockout','Lower until slight chest stretch'],tip:'Upper chest development. Seated and supported, safe at this recovery stage.'}
+  ]},
+  day3:{label:'Day 3 — Functional strength',sub:'Pallof press, progressions, more core',color:'#1565C0',exs:[
+    {n:'Pallof press',s:'3',r:'12 each side',note:'Anti-rotation core, key for disc health',steps:['Cable at chest height, stand sideways to it','Hold handle at chest with both hands','Step away until good cable tension','Press handle straight out, resist rotation','Hold extended 2 seconds','Return to chest'],tip:'Trains the core to resist rotation, exactly what protects the disc. Start very light.'},
+    {n:'Cable woodchop (light)',s:'3',r:'12 each',note:'STOP immediately if back pain',steps:['Cable at high position, stand sideways','Grip with both hands, arms extended','Pull diagonally downward across body','Controlled movement, no jerking','Very light weight only'],tip:'Rotational core when the body is ready for it. Stop instantly if any discomfort.'},
+    {n:'Dead bug (weighted)',s:'3',r:'10 each side',note:'Light dumbbell progression',steps:['Same as Phase A dead bug setup','Add light dumbbell in extending hand','Back still completely flat to floor','Same controlled range, no rushing'],tip:'Progressive version of Phase A dead bug. Same rule applies, back flat or stop.'},
+    {n:'Glute kickback (cable)',s:'3',r:'15 each',note:'Standing, no bending',steps:['Cable on ankle, face the machine','Slight forward lean from hips, hold machine for balance','Kick leg back and up, squeeze glute at top','Control the return, no swinging'],tip:'Posterior chain work without spinal loading. Builds glute strength safely.'},
+    {n:'Seated cable row (wide grip)',s:'3',r:'12',note:'Upper back thickness',steps:['Use wider grip handle','Pull to lower chest rather than abdomen','Squeeze shoulder blades at end','Extend fully for stretch'],tip:'Upper back thickness. The wider grip hits different row fibres.'}
+  ]}
+}}};
+
+var vanjaWarmup=[
+  {n:'Passive resting squat',d:'60-90 sec hold',steps:['Stand feet shoulder-width, toes slightly out','Lower all the way into a deep squat','Let elbows push knees gently outward','Relax completely, this is a rest position not an exercise','Hold 60 to 90 seconds using a rack for balance at first','Work toward heels flat on floor over time'],tip:'Vanja signature move. Do it daily in small doses while watching TV or brushing teeth. Transforms hip mobility over 8 weeks.'},
+  {n:'90/90 hip flow',d:'5 each side',steps:['Sit on floor, one knee 90 degrees in front and one 90 degrees to the side','Sit up tall, no slumping','Rotate both knees to the other side slowly','Pause each side for a breath','Fold over front shin and hold 20 seconds'],tip:'Targets hip rotation that almost no machine can reach. Slower is always better here.'},
+  {n:'Thoracic rotation (thread the needle)',d:'8 each side',steps:['Start on hands and knees, hips stay still throughout','Thread one arm under your body as far as possible','Let that shoulder drop toward the floor','Open back up reaching that arm to the ceiling','8 reps each side'],tip:'Unlocks the upper back (thoracic spine). Safe for post-discectomy because lower back stays neutral.'},
+  {n:'Shoulder dislocates',d:'10 slow reps',steps:['Hold a resistance band or towel with wide grip wider than shoulders','Arms straight in front of you','Sweep the band up overhead slowly','Continue the arc until behind your body','Reverse back to front for 10 slow reps','Narrow grip gradually as flexibility improves'],tip:'Nothing actually dislocates! Best shoulder health exercise available. Start with a very wide grip.'},
+  {n:'Squat calf raises',d:'10 reps',steps:['Get into deep squat position','Hold a rack for balance if needed','From the squat raise heels as high as possible','Lower back down','Stay in squat throughout all 10 reps'],tip:'Builds ankle mobility and calf strength simultaneously from inside the squat position.'}
+];
+
+var vanjaFinisher=[
+  {n:'Passive hang',d:'3 x 20-30 sec',steps:['Grip pull-up bar shoulder-width, overhand','Let body hang completely, feet off floor','Relax shoulders fully, let them shrug up','Just breathe, do not try to pull up','Hold 20 to 30 seconds, repeat 3 times'],tip:'Decompresses the spine, builds grip strength and opens the shoulders. Vanja number 1 daily habit.'},
+  {n:'Bridge push-up',d:'3 x 8-10',steps:['Lie on back, knees bent, feet flat','Push hips up into bridge, squeeze glutes','Plant hands beside ears, fingers toward shoulders','Push into hands and lift head off the floor','Extend arms as much as feels comfortable','Lower back slowly and repeat'],tip:'Full spinal extension activates the entire posterior chain in a range no machine reaches. Transformative for posture.'},
+  {n:'Modified sissy squat',d:'3 x 8, very slow',steps:['Stand holding a rack or wall for support','Feet shoulder-width, heels flat on floor','Lean your whole body backward slowly like a plank tipping back','Knees travel forward and down as you lean','Lower as far as you can control, 45 to 90 degrees','Push back up very slowly, this should burn'],tip:'Directly targets lower quad above the knee AND restores end-range knee strength. Slow is everything.'},
+  {n:'Toe squat',d:'2 x 30-45 sec',steps:['Stand feet hip-width','Rise onto tiptoes','From that raised position bend knees and sit onto heels','Weight on balls of feet','Hold 30 to 45 seconds using wall for balance at first'],tip:'Builds foot arch strength, ankle stability and calf flexibility simultaneously. Surprisingly hard at first.'},
+  {n:'Downward dog leg raise',d:'2 x 8 each',steps:['Push hips up into downward dog position, upside-down V shape','Straighten legs as much as comfortable','Raise one leg high behind you, keep it straight','Hold at top 1 to 2 seconds, squeeze the glute firmly','Lower and repeat 8 times each side'],tip:'Hits the glute through a full range that machines cannot replicate, especially the deep fibres.'}
+];
+
+var vanjaHim=[
+  {n:'Passive resting squat',d:'60-90 sec',steps:['Stand at a rack, hold for balance','Feet shoulder-width, lower into deep squat','Fully relax in the position','Heels flat or slightly raised if needed'],tip:'Excellent for post-discectomy hip mobility. No spinal loading, completely safe. Use rack for support.'},
+  {n:'Passive hang',d:'3 x 15-20 sec',steps:['Grip pull-up bar shoulder-width','Let body hang fully, feet off floor','Relax completely, breathe slowly','Start with 10 to 15 sec and build up gradually'],tip:'Gently DECOMPRESSES the lumbar spine, the opposite of compression loading. Excellent for disc recovery. Mention to your physio.'},
+  {n:'90/90 hip flow',d:'5 each side',steps:['Sit on floor, both knees at 90 degrees','Rotate hips side to side slowly','Stop if any nerve symptoms occur','Gentle and controlled throughout'],tip:'Hip mobility essential during recovery. Stop immediately if any tingling or radiating sensation.'},
+  {n:'Thoracic rotation',d:'8 each side',steps:['On all fours, hips completely still','Thread one arm under body','Let shoulder drop toward floor','Open back up reaching to ceiling'],tip:'Upper spine only, lower back stays neutral throughout. Spine-safe and physio-approved post-surgery.'},
+  {n:'Shoulder dislocates',d:'10 slow',steps:['Wide grip band or towel','Sweep arms overhead and behind body slowly','Keep core braced, no arching lower back','Return forward slowly'],tip:'Shoulder mobility work. Keep core tight and avoid arching the lower back throughout.'},
+  {n:'Toe squat',d:'2 x 30 sec',steps:['Rise onto tiptoes','Bend knees and sit onto heels','Use wall for balance','Hold 30 seconds'],tip:'Foot and ankle health, no spinal load at all. Fully safe at all recovery stages.'}
+];
+
+var allExercises=[
+  {n:'Passive resting squat',m:'Hips, ankles, knees',who:BOTH,cat:'Vanja moves',steps:['Stand feet shoulder-width, toes slightly out','Lower all the way into a deep squat','Let elbows push knees gently outward','Fully relax, this is a rest position','Hold 60 to 90 seconds using a rack at first'],tip:'Vanja signature move. Do it daily in small doses. Transforms hip mobility over 8 weeks.'},
+  {n:'Passive hang',m:'Spine, shoulders, grip',who:BOTH,cat:'Vanja moves',steps:['Grip pull-up bar shoulder-width','Let body hang completely, feet off floor','Relax shoulders fully','Just breathe, hold 20 to 30 seconds','Repeat 3 times'],tip:'Decompresses the spine. Excellent for disc recovery too. Vanja number 1 daily habit.'},
+  {n:'90/90 hip flow',m:'Hip rotators',who:BOTH,cat:'Vanja moves',steps:['Sit, one knee 90 degrees front, one to the side','Sit up tall','Rotate knees side to side slowly','Fold over front shin, hold 20 sec'],tip:'Targets hip rotation that almost no machine can reach. Slower is better.'},
+  {n:'Thoracic rotation',m:'Upper back, thoracic spine',who:BOTH,cat:'Vanja moves',steps:['On hands and knees, hips still','Thread one arm under body','Let shoulder drop toward floor','Open back up, reach to ceiling','8 reps each side'],tip:'Unlocks the upper spine. Lower back stays neutral throughout, safe post-surgery.'},
+  {n:'Shoulder dislocates',m:'Shoulders, posture',who:BOTH,cat:'Vanja moves',steps:['Wide grip on band or towel','Sweep arms overhead and behind body','Reverse back, 10 slow reps','Narrow grip as flexibility improves'],tip:'Best shoulder health exercise available. Start with very wide grip.'},
+  {n:'Toe squat',m:'Feet, ankles, calves',who:BOTH,cat:'Vanja moves',steps:['Rise onto tiptoes','Bend knees and sit onto heels','Weight on balls of feet','Hold 30 to 45 seconds'],tip:'Builds foot arch strength, ankle stability and calf flexibility simultaneously.'},
+  {n:'Bridge push-up',m:'Spine extension, glutes',who:HER,cat:'Vanja moves',steps:['Lie on back, knees bent','Push hips up into bridge','Hands beside ears, fingers toward shoulders','Push into hands, lift head off floor','Extend arms, lower slowly','8 to 10 reps'],tip:'Full spinal extension activates posterior chain in range no machine reaches.'},
+  {n:'Modified sissy squat',m:'Lower quads, knee strength',who:HER,cat:'Vanja moves',steps:['Hold rack for support','Feet shoulder-width, heels flat','Lean whole body backward slowly','Knees travel forward and down','Lower to 45 to 90 degrees','Push back up very slowly, should burn'],tip:'Directly targets lower quad above the knee. Slow is everything.'},
+  {n:'Downward dog leg raise',m:'Glutes, hamstrings',who:HER,cat:'Vanja moves',steps:['Push hips up into downward dog V shape','Raise one leg high behind you, straight','Hold at top 1 to 2 sec, squeeze glute','Lower and repeat 8 each side'],tip:'Hits the glute through full range that machines cannot replicate.'},
+  {n:'Goblet squat',m:'Quads, glutes, core',who:HER,cat:'Lower body',steps:['Hold dumbbell at chest','Feet shoulder-width, toes out 30 degrees','Lower until thighs parallel','Push through heels to stand','Squeeze glutes at top'],tip:'Use elbows to push knees out at bottom for deeper hip opening.'},
+  {n:'Hip thrust',m:'Glutes all heads',who:HER,cat:'Lower body',steps:['Upper back on bench, weight on hips','Feet flat, hip-width','Drive through heels, thrust hips up','Squeeze 1 full second at top','Lower slowly, hips hover'],tip:'The 1-second squeeze is everything. Feel it in glutes not lower back.'},
+  {n:'Romanian deadlift',m:'Hamstrings, glutes',who:HER,cat:'Lower body',steps:['Dumbbells in front of thighs','Push hips BACK not down','Slide weights down legs','Stop at hamstring stretch','Drive hips forward to return'],tip:'Hip hinge not a squat. Soft knee bend stays constant.'},
+  {n:'Standing calf raises',m:'Gastrocnemius upper calf',who:HER,cat:'Lower body',steps:['On edge of step','Rise to tiptoes fully','Hold 1 sec at top','Lower slowly over 3 seconds'],tip:'3-second lowering builds the shape. Do not rush this exercise.'},
+  {n:'Curtsy lunge',m:'Outer glutes, inner thighs',who:HER,cat:'Lower body',steps:['Step one foot back and diagonally across','Lower back knee toward floor','Front knee stays over front foot','Push through front heel to return'],tip:'The diagonal position loads gluteus medius, outer glute curve.'},
+  {n:'Sumo squat',m:'Inner thighs, glutes',who:HER,cat:'Lower body',steps:['Feet wide, toes 45 degrees out','Sit straight down between feet','Knees track over toes','Drive through both heels to stand'],tip:'Wide stance loads inner thighs more than regular squats.'},
+  {n:'Tricep pushdown',m:'Triceps',who:HER,cat:'Upper body',steps:['Cable at chest height','Elbows pinned to sides, do not move','Push bar down until straight','Squeeze 1 sec at bottom','Return slowly'],tip:'Elbows must stay pinned. If they flare you lose the tricep focus.'},
+  {n:'Overhead tricep extension',m:'Tricep long head, underarm area',who:HER,cat:'Upper body',steps:['Dumbbell held with both hands overhead','Elbows beside ears, fixed','Lower weight behind head slowly','Press back up to overhead extension'],tip:'Targets the saggy underarm area specifically. The Phase B key arm move.'},
+  {n:'Lateral raises',m:'Medial deltoid',who:HER,cat:'Upper body',steps:['Light dumbbells at sides','Raise to sides to shoulder height','Lead with elbows not hands','Lower slowly 2 to 3 sec'],tip:'Always lighter than expected. Never swing.'},
+  {n:'Leg press',m:'Quads, glutes, hamstrings',who:BOTH,cat:'Lower body',steps:['Sit fully back, feet shoulder-width','Lower until knees 90 degrees','Press through full foot','Soft bend at top'],tip:'Higher feet means more glutes. Lower feet means more quads.'},
+  {n:'Glute bridge',m:'Glutes, hamstrings',who:BOTH,cat:'Lower body',steps:['Lie on back, knees bent','Drive hips up through heels','Squeeze hard at top, hold 1 sec','Lower slowly'],tip:'Band above knees activates outer glute too.'},
+  {n:'Seated cable row',m:'Mid-back, rear delts',who:BOTH,cat:'Upper body',steps:['Sit tall at machine','Pull to lower abdomen','Squeeze shoulder blades firmly at end','Hold 1 sec, extend fully'],tip:'Shoulder blade squeeze is the point. Back does the work not biceps.'},
+  {n:'Lat pulldown',m:'Latissimus dorsi, biceps',who:BOTH,cat:'Upper body',steps:['Wide overhand grip','Lean back slightly','Pull bar to upper chest','Squeeze blades together','Arms extend fully on return'],tip:'Think elbows to back pockets for lat engagement.'},
+  {n:'Dead bug',m:'Deep core, spine-safe',who:HIM,cat:'Core rehab',steps:['Lie on back, arms up, knees 90 degrees','Press lower back completely flat, stays flat','Extend one arm and opposite leg','Only as far as back stays flat','Return, repeat other side'],tip:'If lower back lifts off the floor you have gone too far. Reduce range.'},
+  {n:'Bird dog',m:'Core stability, glutes',who:HIM,cat:'Core rehab',steps:['Hands and knees, spine neutral','Extend opposite arm and leg simultaneously','Hold 2 to 3 sec, hips level','Return slowly'],tip:'A glass of water on your back should not spill. That is the standard.'},
+  {n:'Pallof press',m:'Anti-rotation core',who:HIM,cat:'Core rehab',steps:['Cable at chest height, stand sideways','Hold handle at chest with both hands','Step away for cable tension','Press straight out, resist rotation','Hold 2 sec, return to chest'],tip:'Trains core to resist rotation, exactly what protects the disc.'},
+  {n:'Face pull',m:'Rear delts, rotator cuff',who:HIM,cat:'Upper body',steps:['Cable at face height, rope attachment','Pull toward face, elbows high and wide','Hands beside ears at end','Return slowly'],tip:'Non-negotiable long-term shoulder health exercise. Exceptional post-surgery.'}
+];
+
+var genTips=[
+  {t:'Protein and nutrition',b:'Aim for 1.6g protein per kg of bodyweight daily. Eat a light meal 1 to 2 hours before training. Stay hydrated with at least 2L water daily, more on training days.'},
+  {t:'Sleep and recovery',b:'7 to 9 hours sleep every night. Muscle is built and tissue heals during sleep, not during training. Do the Vanja challenge on rest days. Rest is part of the plan.'},
+  {t:'Progressive overload',b:'Add small amounts of weight or reps every single week. Write down what you lift so you can beat it next session. This is how the body changes.'},
+  {t:'Soreness in weeks 1 to 2',b:'Soreness in the first two weeks is completely normal and expected after 6 months off. Keep moving gently, it actually reduces faster with light movement than with complete rest.'},
+  {t:'Cellulite note',b:'The lower body exercises, especially hip thrusts, sumo squats, curtsy lunges and the Vanja sissy squat, directly target the upper leg and thigh area. Building muscle underneath smooths the surface over 6 to 12 weeks. Stay consistent.'},
+  {t:'Following Vanja',b:'Find her at @vanja.moves on Instagram and YouTube. Her Making Moves podcast is excellent. The MovesMethod Mobility Toolkit (around $27) is a brilliant companion to this plan.'},
+  {t:'His recovery reminder',b:'Get surgeon or physio clearance before starting. No deadlifts, no barbell squats, no overhead barbell press, no box jumps. Stop if sharp pain, radiating leg pain, numbness or tingling occurs.'}
+];
+
+function showPg(id,btn){document.querySelectorAll('.pg').forEach(function(p){p.classList.remove('on')});document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('on')});document.getElementById('pg-'+id).classList.add('on');btn.classList.add('on')}
+function setPlan(p,btn){plan=p;document.querySelectorAll('.pbtn').forEach(function(b){b.classList.remove('on')});btn.classList.add('on');renderPlan()}
+function setPhase(p,btn){phase=p;document.querySelectorAll('.phbtn').forEach(function(b){b.classList.remove('on')});btn.classList.add('on');renderPlan()}
+
+function renderPlan(){
+  var data=plans[plan][phase];
+  var isHer=plan===HER;
+  var runHer='Wks 1-2: 20-25 min easy. Wks 3-4: 25-30 min + 2x 2-min intervals. Wks 5-6: 30 min + 3x 3-min intervals. Wks 7-8: 30-35 min non-stop.';
+  var runHim='Wks 1-4: Brisk walk or easy 20 min jog, no sprinting. Wks 5-8: Easy 25-30 min. Alternative: stationary bike or cross trainer.';
+  var finHer='Passive hang 3x20-30s | Bridge push-up 3x8 | Modified sissy squat 3x8 | Toe squat 2x30s | Downward dog leg raise 2x8 each';
+  var finHim='Passive hang 3x15-20s | Thoracic rotation 2x8 each | 90/90 hip flow 2x5 each | Toe squat 2x30s';
+  var html='<div class="bnr van" style="margin-bottom:12px"><div class="bnr-t van">Before every session</div><div class="bnr-b">Complete the 5-move Vanja warm-up (8-10 min) on the Vanja tab. Non-negotiable!</div></div>';
+  ['day1','day2','day3'].forEach(function(dk,di){
+    var day=data[dk];
+    html+='<div class="dcard" id="dc-'+dk+'"><div class="dcard-hdr" onclick="toggleDay(\''+dk+'\')"><div class="dleft"><div class="dot" style="background:'+day.color+'"></div><div><div class="dname">'+day.label+'</div><div class="dsub">'+day.sub+'</div></div></div><span class="dcnt">'+day.exs.length+' exercises</span><span class="dchev">&#9660;</span></div><div class="dbody">';
+    day.exs.forEach(function(ex,ei){
+      html+='<div class="exrow" id="er-'+dk+'-'+ei+'" onclick="toggleEx(\''+dk+'\','+ei+')"><div class="extop"><span class="exname">'+ex.n+'</span><span class="expill">'+ex.s+' x '+ex.r+'</span></div><div class="exnote">'+ex.note+'</div><div class="exdetail"><div class="steps-lbl">How to do it</div><ol class="steps">'+ex.steps.map(function(s){return '<li>'+s+'</li>'}).join('')+'</ol><div class="extip'+(isHer?'':' him')+'">'+ex.tip+'</div></div></div>';
+    });
+    html+='</div></div>';
+  });
+  html+='<div class="bnr run" style="margin-top:12px"><div class="bnr-t run">Run day</div><div class="bnr-b">'+(isHer?runHer:runHim)+'</div></div>';
+  html+='<div class="bnr van" style="margin-top:8px"><div class="bnr-t van">After every session - Vanja finisher</div><div class="bnr-b">'+(isHer?finHer:finHim)+'</div></div>';
+  document.getElementById('plan-content').innerHTML=html;
+}
+
+function toggleDay(dk){document.getElementById('dc-'+dk).classList.toggle('open')}
+function toggleEx(dk,ei){document.getElementById('er-'+dk+'-'+ei).classList.toggle('open')}
+
+var exCat='All';
+var cats=['All','Vanja moves','Lower body','Upper body','Core rehab'];
+function renderCatFilters(){document.getElementById('cat-filters').innerHTML=cats.map(function(c){return '<button class="fbtn'+(c==='All'?' on':'')+'" onclick="setExCat(\''+c+'\',this)">'+c+'</button>'}).join('')}
+function setExCat(c,btn){exCat=c;document.querySelectorAll('.fbtn').forEach(function(b){b.classList.remove('on')});btn.classList.add('on');renderEx()}
+
+function renderEx(){
+  var search=(document.getElementById('ex-search').value||'').toLowerCase();
+  var seen={};
+  var filtered=allExercises.filter(function(e){
+    if(seen[e.n])return false;
+    var catOk=exCat==='All'||e.cat===exCat;
+    var searchOk=!search||e.n.toLowerCase().indexOf(search)>=0||(e.m||'').toLowerCase().indexOf(search)>=0;
+    if(catOk&&searchOk){seen[e.n]=true;return true}
+    return false;
+  });
+  if(!filtered.length){document.getElementById('ex-list').innerHTML='<div class="empty">No exercises found</div>';return}
+  document.getElementById('ex-list').innerHTML=filtered.map(function(ex,i){
+    var who=ex.who;
+    var bc=who===HER?'her':who===HIM?'him':'both';
+    var bt=who===HER?'Her':who===HIM?'Him':'Both';
+    var tc=who===HIM?' him':who===BOTH?' van':'';
+    return '<div class="dcard" id="exc-'+i+'" style="margin-bottom:8px"><div class="dcard-hdr" onclick="document.getElementById(\'exc-'+i+'\').classList.toggle(\'open\')"><div class="dleft"><div><div class="dname">'+ex.n+'</div><div class="dsub">'+(ex.m||ex.d||'')+'</div></div></div><span class="ex-badge '+bc+'">'+bt+'</span><span class="dchev">&#9660;</span></div><div class="dbody"><div style="padding:12px 14px"><div class="steps-lbl">How to do it</div><ol class="steps">'+((ex.steps||[]).map(function(s){return '<li>'+s+'</li>'}).join(''))+'</ol>'+(ex.tip?'<div class="extip'+tc+'">'+ex.tip+'</div>':'')+'</div></div></div>';
+  }).join('');
+}
+
+function renderWkGrid(){
+  document.getElementById('wk-grid').innerHTML=Array.from({length:8},function(_,i){var w=i+1;return '<div class="wk-cell'+(w===week?' cur':'')+'" onclick="setWk('+w+')"><div class="wk-num">Wk '+w+'</div><div class="wk-ph">'+(w<=4?'Phase A':'Phase B')+'</div></div>'}).join('');
+  document.getElementById('t-wk').textContent=week;
+  document.getElementById('t-ph').textContent=week<=4?'A':'B';
+  document.getElementById('wk-badge').textContent='Week '+week+' of 8';
+}
+function setWk(w){week=w;renderWkGrid()}
+function adjWk(d){week=Math.max(1,Math.min(8,week+d));renderWkGrid()}
+function adj(type,val){if(type==='sq')sq=Math.max(0,Math.min(10,sq+val));else hg=Math.max(0,Math.min(60,hg+val));updateTracker()}
+function updateTracker(){document.getElementById('sq-bar').style.width=Math.round(sq/10*100)+'%';document.getElementById('hg-bar').style.width=Math.round(hg/60*100)+'%';document.getElementById('sq-lbl').textContent=sq+' / 10';document.getElementById('hg-lbl').textContent=hg+' / 60';document.getElementById('sq-val').textContent=sq+' min';document.getElementById('hg-val').textContent=hg+' sec'}
+function resetDaily(){sq=0;hg=0;updateTracker()}
+
+function renderVanja(){
+  document.getElementById('vanja-warmup').innerHTML=vanjaWarmup.map(function(e,i){return '<div class="dcard" id="vw-'+i+'" style="margin-bottom:8px"><div class="dcard-hdr" onclick="document.getElementById(\'vw-'+i+'\').classList.toggle(\'open\')"><div class="dleft"><div class="dot" style="background:var(--van)"></div><div><div class="dname">'+e.n+'</div><div class="dsub">'+e.d+'</div></div></div><span class="dchev">&#9660;</span></div><div class="dbody"><div style="padding:12px 14px"><ol class="steps">'+e.steps.map(function(s){return '<li>'+s+'</li>'}).join('')+'</ol><div class="extip van">'+e.tip+'</div></div></div></div>'}).join('');
+  document.getElementById('vanja-finisher').innerHTML=vanjaFinisher.map(function(e,i){return '<div class="dcard" id="vf-'+i+'" style="margin-bottom:8px"><div class="dcard-hdr" onclick="document.getElementById(\'vf-'+i+'\').classList.toggle(\'open\')"><div class="dleft"><div class="dot" style="background:var(--her)"></div><div><div class="dname">'+e.n+'</div><div class="dsub">'+e.d+'</div></div></div><span class="ex-badge her">Her</span><span class="dchev">&#9660;</span></div><div class="dbody"><div style="padding:12px 14px"><ol class="steps">'+e.steps.map(function(s){return '<li>'+s+'</li>'}).join('')+'</ol><div class="extip">'+e.tip+'</div></div></div></div>'}).join('');
+  document.getElementById('vanja-him').innerHTML=vanjaHim.map(function(e,i){return '<div class="dcard" id="vh-'+i+'" style="margin-bottom:8px"><div class="dcard-hdr" onclick="document.getElementById(\'vh-'+i+'\').classList.toggle(\'open\')"><div class="dleft"><div class="dot" style="background:var(--him)"></div><div><div class="dname">'+e.n+'</div><div class="dsub">'+e.d+'</div></div></div><span class="ex-badge him">Him</span><span class="dchev">&#9660;</span></div><div class="dbody"><div style="padding:12px 14px"><ol class="steps">'+e.steps.map(function(s){return '<li>'+s+'</li>'}).join('')+'</ol><div class="extip him">'+e.tip+'</div></div></div></div>'}).join('');
+}
+
+function renderTips(){document.getElementById('gen-tips').innerHTML=genTips.map(function(t){return '<div class="tip-card"><div class="tip-t">'+t.t+'</div><div class="tip-b">'+t.b+'</div></div>'}).join('')}
+
+renderPlan();renderCatFilters();renderEx();renderWkGrid();updateTracker();renderVanja();renderTips();
+</script>
+</body>
+</html>
